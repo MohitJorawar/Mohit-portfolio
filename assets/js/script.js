@@ -29,29 +29,26 @@ const modalText = document.querySelector("[data-modal-text]");
 
 // modal toggle function
 const testimonialsModalFunc = function () {
-  modalContainer.classList.toggle("active");
-  overlay.classList.toggle("active");
+  if (modalContainer) modalContainer.classList.toggle("active");
+  if (overlay) overlay.classList.toggle("active");
 }
 
 // add click event to all modal items
 for (let i = 0; i < testimonialsItem.length; i++) {
-
   testimonialsItem[i].addEventListener("click", function () {
-
-    modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
-    modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
-    modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
-    modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
-
+    if (modalImg) {
+      modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
+      modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
+    }
+    if (modalTitle) modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
+    if (modalText) modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
     testimonialsModalFunc();
-
   });
-
 }
 
 // add click event to modal close button
-modalCloseBtn.addEventListener("click", testimonialsModalFunc);
-overlay.addEventListener("click", testimonialsModalFunc);
+if (modalCloseBtn) modalCloseBtn.addEventListener("click", testimonialsModalFunc);
+if (overlay) overlay.addEventListener("click", testimonialsModalFunc);
 
 
 
@@ -144,16 +141,118 @@ const pages = document.querySelectorAll("[data-page]");
 for (let i = 0; i < navigationLinks.length; i++) {
   navigationLinks[i].addEventListener("click", function () {
 
-    for (let i = 0; i < pages.length; i++) {
-      if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
-        pages[i].classList.add("active");
+    const clickedLabel = this.textContent.trim().toLowerCase();
+
+    for (let j = 0; j < pages.length; j++) {
+      if (clickedLabel === pages[j].dataset.page) {
+        pages[j].classList.add("active");
         navigationLinks[i].classList.add("active");
         window.scrollTo(0, 0);
       } else {
-        pages[i].classList.remove("active");
-        navigationLinks[i].classList.remove("active");
+        pages[j].classList.remove("active");
+        navigationLinks[j].classList.remove("active");
       }
     }
 
   });
 }
+
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PROJECT CAROUSEL  –  hover-to-play, mouseleave-to-reset
+// [data-carousel] is the .carousel-track <div> inside each .project-img figure
+// ─────────────────────────────────────────────────────────────────────────────
+
+(function initCarousels() {
+  'use strict';
+
+  const tracks = document.querySelectorAll('[data-carousel]');
+
+  tracks.forEach(function (track) {
+
+    // Slides are direct <img> children of the track div
+    const slides = Array.from(track.querySelectorAll('.carousel-slide'));
+    const originalCount = slides.length;
+    if (originalCount < 1) return;
+
+    // ── Clone first slide for seamless loop ──
+    const firstClone = slides[0].cloneNode(true);
+    track.appendChild(firstClone);
+
+    // Dots live in a sibling div inside the same parent <figure>
+    const figure = track.parentElement;           // .project-img <figure>
+    const dots = figure ? Array.from(figure.querySelectorAll('.carousel-dot')) : [];
+    // Hover trigger = nearest <a> ancestor (the project card link)
+    const trigger = track.closest('a') || track;
+
+    let currentIndex = 0;
+    let timer = null;
+    let isTransitioning = false;
+
+    // ── Preload all images to prevent flicker ──
+    slides.forEach(function (slide) {
+      const img = new Image();
+      img.src = slide.src;
+    });
+
+    // ── Jump to slide at given index (Seamless loop logic) ──
+    function goTo(index, animate = true) {
+      // Remove active from current dot
+      if (dots[currentIndex % originalCount]) {
+        dots[currentIndex % originalCount].classList.remove('active');
+      }
+
+      currentIndex = index;
+
+      if (!animate) {
+        track.style.transition = 'none';
+      } else {
+        track.style.transition = 'transform 0.3s ease-in-out';
+      }
+
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+      // Update dots
+      if (dots[currentIndex % originalCount]) {
+        dots[currentIndex % originalCount].classList.add('active');
+      }
+
+      // Handle the wrap-around jump after transition
+      if (currentIndex === originalCount && animate) {
+        isTransitioning = true;
+        setTimeout(function () {
+          track.style.transition = 'none';
+          currentIndex = 0;
+          track.style.transform = `translateX(0%)`;
+          isTransitioning = false;
+        }, 300); // Match CSS transition time
+      }
+    }
+
+    // ── Start autoplay ──
+    function startPlay() {
+      if (timer) return;
+      if (figure) figure.classList.add('is-playing');
+      timer = setInterval(function () {
+        if (!isTransitioning) {
+          goTo(currentIndex + 1);
+        }
+      }, 1000);
+    }
+
+    // ── Stop autoplay and reset to first slide ──
+    function stopPlay() {
+      clearInterval(timer);
+      timer = null;
+      if (figure) figure.classList.remove('is-playing');
+      isTransitioning = false;
+      goTo(0, false); // Reset without animation to avoid "back-sliding"
+    }
+
+    trigger.addEventListener('mouseenter', startPlay);
+    trigger.addEventListener('mouseleave', stopPlay);
+
+  });
+
+}());

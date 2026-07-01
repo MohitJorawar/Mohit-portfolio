@@ -1,39 +1,30 @@
 'use strict';
 
-
-
-// element toggle function
+// Element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
 
-
-
-// sidebar variables
+// Sidebar variables and functionality
 const sidebar = document.querySelector("[data-sidebar]");
 const sidebarBtn = document.querySelector("[data-sidebar-btn]");
+if (sidebarBtn && sidebar) {
+  sidebarBtn.addEventListener("click", function () { elementToggleFunc(sidebar); });
+}
 
-// sidebar toggle functionality for mobile
-sidebarBtn.addEventListener("click", function () { elementToggleFunc(sidebar); });
-
-
-
-// testimonials variables
+// Testimonials modal variables & functionality (retained for layout compatibility)
 const testimonialsItem = document.querySelectorAll("[data-testimonials-item]");
 const modalContainer = document.querySelector("[data-modal-container]");
 const modalCloseBtn = document.querySelector("[data-modal-close-btn]");
 const overlay = document.querySelector("[data-overlay]");
 
-// modal variable
 const modalImg = document.querySelector("[data-modal-img]");
 const modalTitle = document.querySelector("[data-modal-title]");
 const modalText = document.querySelector("[data-modal-text]");
 
-// modal toggle function
 const testimonialsModalFunc = function () {
   if (modalContainer) modalContainer.classList.toggle("active");
   if (overlay) overlay.classList.toggle("active");
 }
 
-// add click event to all modal items
 for (let i = 0; i < testimonialsItem.length; i++) {
   testimonialsItem[i].addEventListener("click", function () {
     if (modalImg) {
@@ -46,103 +37,33 @@ for (let i = 0; i < testimonialsItem.length; i++) {
   });
 }
 
-// add click event to modal close button
 if (modalCloseBtn) modalCloseBtn.addEventListener("click", testimonialsModalFunc);
 if (overlay) overlay.addEventListener("click", testimonialsModalFunc);
 
-
-
-// custom select variables
-const select = document.querySelector("[data-select]");
-const selectItems = document.querySelectorAll("[data-select-item]");
-const selectValue = document.querySelector("[data-selecct-value]");
-const filterBtn = document.querySelectorAll("[data-filter-btn]");
-
-select.addEventListener("click", function () { elementToggleFunc(this); });
-
-// add event in all select items
-for (let i = 0; i < selectItems.length; i++) {
-  selectItems[i].addEventListener("click", function () {
-
-    let selectedValue = this.innerText.toLowerCase();
-    selectValue.innerText = this.innerText;
-    elementToggleFunc(select);
-    filterFunc(selectedValue);
-
-  });
-}
-
-// filter variables
-const filterItems = document.querySelectorAll("[data-filter-item]");
-
-const filterFunc = function (selectedValue) {
-
-  for (let i = 0; i < filterItems.length; i++) {
-
-    if (selectedValue === "all") {
-      filterItems[i].classList.add("active");
-    } else if (selectedValue === filterItems[i].dataset.category) {
-      filterItems[i].classList.add("active");
-    } else {
-      filterItems[i].classList.remove("active");
-    }
-
-  }
-
-}
-
-// add event in all filter button items for large screen
-let lastClickedBtn = filterBtn[0];
-
-for (let i = 0; i < filterBtn.length; i++) {
-
-  filterBtn[i].addEventListener("click", function () {
-
-    let selectedValue = this.innerText.toLowerCase();
-    selectValue.innerText = this.innerText;
-    filterFunc(selectedValue);
-
-    lastClickedBtn.classList.remove("active");
-    this.classList.add("active");
-    lastClickedBtn = this;
-
-  });
-
-}
-
-
-
-// contact form variables
+// Contact form variables & validation
 const form = document.querySelector("[data-form]");
 const formInputs = document.querySelectorAll("[data-form-input]");
 const formBtn = document.querySelector("[data-form-btn]");
 
-// add event to all form input field
-for (let i = 0; i < formInputs.length; i++) {
-  formInputs[i].addEventListener("input", function () {
-
-    // check form validation
-    if (form.checkValidity()) {
-      formBtn.removeAttribute("disabled");
-    } else {
-      formBtn.setAttribute("disabled", "");
-    }
-
-  });
+if (form && formBtn) {
+  for (let i = 0; i < formInputs.length; i++) {
+    formInputs[i].addEventListener("input", function () {
+      if (form.checkValidity()) {
+        formBtn.removeAttribute("disabled");
+      } else {
+        formBtn.setAttribute("disabled", "");
+      }
+    });
+  }
 }
 
-
-
-// page navigation variables
+// Page navigation variables & event handling
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 
-// add event to all nav link
 for (let i = 0; i < navigationLinks.length; i++) {
   navigationLinks[i].addEventListener("click", function () {
-
     const clickedLabel = this.textContent.trim().toLowerCase();
-
     for (let j = 0; j < pages.length; j++) {
       if (clickedLabel === pages[j].dataset.page) {
         pages[j].classList.add("active");
@@ -153,52 +74,888 @@ for (let i = 0; i < navigationLinks.length; i++) {
         navigationLinks[j].classList.remove("active");
       }
     }
-
   });
 }
 
+// Default initial data if LocalStorage is empty
+const defaultProjects = [
+  {
+    id: "project-bowl-bachan",
+    title: "Ecommerce Restaurant Website",
+    category: "Web development",
+    link: "https://mohitjorawar.github.io/Bowl-Bachan/",
+    images: [
+      "./assets/images/projects/bowl-bachan/1.png",
+      "./assets/images/projects/bowl-bachan/2.png",
+      "./assets/images/projects/bowl-bachan/3.png",
+      "./assets/images/projects/bowl-bachan/4.png",
+      "./assets/images/projects/bowl-bachan/5.png",
+      "./assets/images/projects/bowl-bachan/6.png"
+    ]
+  },
+  {
+    id: "project-food-website",
+    title: "Ecommerce Food Website",
+    category: "Web development",
+    link: "https://mohitjorawar.github.io/E-commerce-food-Website/",
+    images: [
+      "./assets/images/projects/food-website/2.png",
+      "./assets/images/projects/food-website/3.png",
+      "./assets/images/projects/food-website/5.png",
+      "./assets/images/projects/food-website/6.png",
+      "./assets/images/projects/food-website/8.png",
+      "./assets/images/projects/food-website/9.png",
+      "./assets/images/projects/food-website/10.png"
+    ]
+  },
+  {
+    id: "project-space",
+    title: "Space Project",
+    category: "Web development",
+    link: "https://mohitjorawar.github.io/Space-Project/",
+    images: [
+      "./assets/images/projects/space-project/1.png",
+      "./assets/images/projects/space-project/2.png",
+      "./assets/images/projects/space-project/3.png",
+      "./assets/images/projects/space-project/4.png",
+      "./assets/images/projects/space-project/5.png"
+    ]
+  },
+  {
+    id: "project-get-crafted",
+    title: "Get Crafted Ecommerce website",
+    category: "MERN Stack",
+    link: "https://get-crafted.vercel.app/",
+    images: [
+      "./assets/images/projects/get-crafted/1.png",
+      "./assets/images/projects/get-crafted/2.png",
+      "./assets/images/projects/get-crafted/3.png",
+      "./assets/images/projects/get-crafted/4.png",
+      "./assets/images/projects/get-crafted/5.png",
+      "./assets/images/projects/get-crafted/6.png",
+      "./assets/images/projects/get-crafted/7.png",
+      "./assets/images/projects/get-crafted/8.png",
+      "./assets/images/projects/get-crafted/9.png",
+      "./assets/images/projects/get-crafted/10.png",
+      "./assets/images/projects/get-crafted/11.png"
+    ]
+  },
+  {
+    id: "project-fitness-gym",
+    title: "Fitness Gym Website",
+    category: "MERN Stack",
+    link: "https://website-gym-phi.vercel.app/",
+    images: [
+      "./assets/images/projects/gym-website/1.png",
+      "./assets/images/projects/gym-website/2.png",
+      "./assets/images/projects/gym-website/3.png",
+      "./assets/images/projects/gym-website/4.png",
+      "./assets/images/projects/gym-website/5.png",
+      "./assets/images/projects/gym-website/6.png",
+      "./assets/images/projects/gym-website/7.png",
+      "./assets/images/projects/gym-website/8.png",
+      "./assets/images/projects/gym-website/9.png",
+      "./assets/images/projects/gym-website/10.png",
+      "./assets/images/projects/gym-website/11.png"
+    ]
+  },
+  {
+    id: "project-get-crafted-js",
+    title: "Ecommerce Get Crafted Website",
+    category: "Web development",
+    link: "https://mohitjorawar.github.io/Get-Creafted-js/",
+    images: [
+      "./assets/images/projects/get-crafted-js/1.png",
+      "./assets/images/projects/get-crafted-js/2.png",
+      "./assets/images/projects/get-crafted-js/3.png",
+      "./assets/images/projects/get-crafted-js/4.png",
+      "./assets/images/projects/get-crafted-js/5.png",
+      "./assets/images/projects/get-crafted-js/6.png",
+      "./assets/images/projects/get-crafted-js/7.png"
+    ]
+  }
+];
 
+const defaultBlogs = [
+  {
+    id: "blog-1",
+    title: "Design conferences in 2022",
+    category: "Design",
+    date: "Feb 23, 2022",
+    datetime: "2022-02-23",
+    description: "Veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+    image: "./assets/images/blog-1.jpg"
+  },
+  {
+    id: "blog-2",
+    title: "Best fonts every designer",
+    category: "Design",
+    date: "Feb 23, 2022",
+    datetime: "2022-02-23",
+    description: "Sed ut perspiciatis, nam libero tempore, cum soluta nobis est eligendi.",
+    image: "./assets/images/blog-2.jpg"
+  },
+  {
+    id: "blog-3",
+    title: "Design digest #80",
+    category: "Design",
+    date: "Feb 23, 2022",
+    datetime: "2022-02-23",
+    description: "Excepteur sint occaecat cupidatat no proident, quis nostrum exercitationem ullam corporis suscipit.",
+    image: "./assets/images/blog-3.jpg"
+  },
+  {
+    id: "blog-4",
+    title: "UI interactions of the week",
+    category: "Design",
+    date: "Feb 23, 2022",
+    datetime: "2022-02-23",
+    description: "Enim ad minim veniam, consectetur adipiscing elit, quis nostrud exercitation ullamco laboris nisi.",
+    image: "./assets/images/blog-4.jpg"
+  },
+  {
+    id: "blog-5",
+    title: "The forgotten art of spacing",
+    category: "Design",
+    date: "Feb 23, 2022",
+    datetime: "2022-02-23",
+    description: "Maxime placeat, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    image: "./assets/images/blog-5.jpg"
+  },
+  {
+    id: "blog-6",
+    title: "Design digest #79",
+    category: "Design",
+    date: "Feb 23, 2022",
+    datetime: "2022-02-23",
+    description: "Optio cumque nihil impedit uo minus quod maxime placeat, velit esse cillum.",
+    image: "./assets/images/blog-6.jpg"
+  }
+];
+
+// Load arrays from LocalStorage (or set default if first time)
+let projects = JSON.parse(localStorage.getItem('portfolio_projects'));
+if (!projects || !Array.isArray(projects)) {
+  projects = defaultProjects;
+  localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+}
+
+let blogs = JSON.parse(localStorage.getItem('portfolio_blogs'));
+if (!blogs || !Array.isArray(blogs)) {
+  blogs = defaultBlogs;
+  localStorage.setItem('portfolio_blogs', JSON.stringify(blogs));
+}
+
+// Render functions
+function renderProjects() {
+  const projectList = document.querySelector(".project-list");
+  if (!projectList) return;
+
+  projectList.innerHTML = "";
+
+  projects.forEach(project => {
+    const li = document.createElement("li");
+    li.className = "project-item active";
+    li.setAttribute("data-filter-item", "");
+    li.setAttribute("data-category", project.category.toLowerCase());
+
+    const hasCarousel = project.images && project.images.length > 1;
+
+    li.innerHTML = `
+      <a href="${project.link}" target="_blank" rel="noopener noreferrer">
+        <figure class="project-img">
+          <div class="carousel-track" data-carousel>
+            ${project.images.map((img, i) => `
+              <img class="carousel-slide ${i === 0 ? 'active' : ''}" src="${img}" alt="${project.title} – slide ${i + 1}" loading="${i === 0 ? 'eager' : 'lazy'}">
+            `).join('')}
+          </div>
+
+          ${hasCarousel ? `
+            <div class="carousel-dots" aria-hidden="true">
+              ${project.images.map((_, i) => `
+                <span class="carousel-dot ${i === 0 ? 'active' : ''}"></span>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          <div class="project-item-icon-box">
+            <ion-icon name="eye-outline"></ion-icon>
+          </div>
+
+          <!-- Edit & Delete Overlays (Visible only in Admin Mode) -->
+          <div class="card-admin-controls" onclick="event.preventDefault(); event.stopPropagation();">
+            <button class="card-control-btn edit" onclick="openEditProject('${project.id}')" title="Edit Project">
+              <ion-icon name="create-outline"></ion-icon>
+            </button>
+            <button class="card-control-btn delete" onclick="deleteProject('${project.id}')" title="Delete Project">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </figure>
+
+        <h3 class="project-title">${project.title}</h3>
+        <p class="project-category">${project.category}</p>
+      </a>
+    `;
+
+    projectList.appendChild(li);
+  });
+
+  // Re-run filtering and carousels
+  let activeCategory = document.querySelector("[data-selecct-value]")?.textContent.trim().toLowerCase() || "all";
+  if (activeCategory === "select category" || !activeCategory) {
+    activeCategory = "all";
+  }
+  filterFunc(activeCategory);
+  initCarousels();
+}
+
+function renderBlogs() {
+  const blogList = document.querySelector(".blog-posts-list");
+  if (!blogList) return;
+
+  blogList.innerHTML = "";
+
+  blogs.forEach(blog => {
+    const li = document.createElement("li");
+    li.className = "blog-post-item";
+
+    li.innerHTML = `
+      <a href="#" onclick="event.preventDefault();">
+        <figure class="blog-banner-box">
+          <img src="${blog.image}" alt="${blog.title}" loading="lazy">
+          
+          <!-- Edit & Delete Overlays (Visible only in Admin Mode) -->
+          <div class="card-admin-controls" onclick="event.preventDefault(); event.stopPropagation();">
+            <button class="card-control-btn edit" onclick="openEditBlog('${blog.id}')" title="Edit Blog">
+              <ion-icon name="create-outline"></ion-icon>
+            </button>
+            <button class="card-control-btn delete" onclick="deleteBlog('${blog.id}')" title="Delete Blog">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </figure>
+
+        <div class="blog-content">
+          <div class="blog-meta">
+            <p class="blog-category">${blog.category}</p>
+            <span class="dot"></span>
+            <time datetime="${blog.datetime}">${blog.date}</time>
+          </div>
+
+          <h3 class="h3 blog-item-title">${blog.title}</h3>
+          <p class="blog-text">${blog.description}</p>
+        </div>
+      </a>
+    `;
+
+    blogList.appendChild(li);
+  });
+}
+
+// Hashing & Authentication
+async function verifyPassword(password) {
+  try {
+    if (window.crypto && crypto.subtle) {
+      const msgBuffer = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex === 'b51e45a12fbae3d0ee2bf77f1a4f80cbf642e2b4d1c237d2c0f7053a54f6b388';
+    }
+  } catch (e) {
+    console.warn("Subtle crypto error, falling back to simple hash:", e);
+  }
+  
+  // Custom simple hash fallback for insecure contexts
+  let hash = 0;
+  for (let i = 0; i < password.length; i++) {
+    hash = (hash << 5) - hash + password.charCodeAt(i);
+    hash = hash & hash;
+  }
+  return hash.toString() === '1512327';
+}
+
+function checkAdminStatus() {
+  const isAdmin = sessionStorage.getItem('portfolio_admin') === 'true';
+  const body = document.body;
+  
+  // Clear any existing admin bar
+  const existingBar = document.querySelector(".admin-bar");
+  if (existingBar) existingBar.remove();
+
+  if (isAdmin) {
+    body.classList.add("admin-mode-active");
+    
+    // Inject floating admin bar
+    const bar = document.createElement("div");
+    bar.className = "admin-bar";
+    bar.innerHTML = `
+      <span><ion-icon name="lock-open-outline" style="display:inline-block; font-size:16px; vertical-align:middle;"></ion-icon> Admin Mode Active</span>
+      <div style="display: flex; gap: 10px;">
+        <button class="logout-btn" onclick="exportData()" title="Export JSON structure to copy into code">
+          <ion-icon name="download-outline"></ion-icon> Export Data
+        </button>
+        <button class="logout-btn" onclick="logoutAdmin()" title="Log out from Admin Mode">
+          <ion-icon name="log-out-outline"></ion-icon> Logout
+        </button>
+      </div>
+    `;
+    body.appendChild(bar);
+  } else {
+    body.classList.remove("admin-mode-active");
+  }
+}
+
+window.logoutAdmin = function() {
+  sessionStorage.removeItem('portfolio_admin');
+  checkAdminStatus();
+  renderProjects();
+  renderBlogs();
+};
+
+window.exportData = function() {
+  const data = {
+    projects: JSON.parse(localStorage.getItem('portfolio_projects')) || [],
+    blogs: JSON.parse(localStorage.getItem('portfolio_blogs')) || []
+  };
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "portfolio_data.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+};
+
+// Admin modal open/close functions
+const adminModal = document.getElementById("admin-modal");
+
+window.closeAdminModal = function() {
+  if (adminModal) {
+    adminModal.classList.remove("active");
+    adminModal.innerHTML = "";
+  }
+};
+
+async function executeWithAuth(actionCallback) {
+  const isAdmin = sessionStorage.getItem('portfolio_admin') === 'true';
+  if (isAdmin) {
+    actionCallback();
+  } else {
+    // Open password modal
+    if (!adminModal) return;
+    
+    adminModal.innerHTML = `
+      <div class="admin-modal-content">
+        <div class="admin-modal-header">
+          <h3 class="admin-modal-title">Admin Authentication</h3>
+          <button class="admin-modal-close" onclick="closeAdminModal()">&times;</button>
+        </div>
+        <form id="admin-auth-form">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="admin-password">Enter Password</label>
+            <input type="password" id="admin-password" class="admin-form-input" required placeholder="••••" autofocus>
+            <div id="auth-error" style="color: #ff5555; font-size: 13px; margin-top: 5px; display: none;">Invalid Password!</div>
+          </div>
+          <div class="admin-form-actions">
+            <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminModal()">Cancel</button>
+            <button type="submit" class="admin-btn admin-btn-primary">Unlock</button>
+          </div>
+        </form>
+      </div>
+    `;
+    adminModal.classList.add("active");
+
+    const authForm = document.getElementById("admin-auth-form");
+    authForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const pwInput = document.getElementById("admin-password").value;
+      const isValid = await verifyPassword(pwInput);
+      if (isValid) {
+        sessionStorage.setItem('portfolio_admin', 'true');
+        checkAdminStatus();
+        closeAdminModal();
+        // Re-render so admin buttons are visible on cards
+        renderProjects();
+        renderBlogs();
+        // Run requested action
+        actionCallback();
+      } else {
+        const err = document.getElementById("auth-error");
+        if (err) err.style.display = "block";
+      }
+    });
+  }
+}
+
+// Image File handling utility
+window.compressAndUpload = function(file, callback) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      let w = img.width;
+      let h = img.height;
+      if (w > h) {
+        if (w > 800) {
+          h *= 800 / w;
+          w = 800;
+        }
+      } else {
+        if (h > 800) {
+          w *= 800 / h;
+          h = 800;
+        }
+      }
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      callback(dataUrl);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+// Project CRUD Operations
+function renderImageRow(url = '') {
+  const row = document.createElement('div');
+  row.className = 'admin-image-item';
+  row.innerHTML = `
+    <input type="text" class="admin-form-input project-image-url" required value="${url}" placeholder="Image URL or upload file">
+    <div class="file-upload-wrapper" style="width: auto; flex-shrink: 0;">
+      <button type="button" class="file-upload-btn" style="padding: 10px;"><ion-icon name="cloud-upload-outline"></ion-icon></button>
+      <input type="file" class="file-upload-input" accept="image/*">
+    </div>
+    <button type="button" class="remove-image-btn" title="Remove image slide"><ion-icon name="close-circle-outline"></ion-icon></button>
+  `;
+  
+  const fileInput = row.querySelector('.file-upload-input');
+  const textInput = row.querySelector('.project-image-url');
+  fileInput.addEventListener('change', function() {
+    window.compressAndUpload(this.files[0], (dataUrl) => {
+      textInput.value = dataUrl;
+    });
+  });
+  
+  row.querySelector('.remove-image-btn').addEventListener('click', function() {
+    row.remove();
+  });
+  
+  return row;
+}
+
+window.openAddProject = function() {
+  if (!adminModal) return;
+
+  adminModal.innerHTML = `
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Add New Project</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal()">&times;</button>
+      </div>
+      <form id="project-form">
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="project-title">Project Title</label>
+          <input type="text" id="project-title" class="admin-form-input" required placeholder="e.g. Portfolio Website">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="project-category">Category</label>
+          <select id="project-category" class="admin-form-select" required>
+            <option value="Web design">Web design</option>
+            <option value="MERN Stack">MERN Stack</option>
+            <option value="Web development">Web development</option>
+          </select>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="project-link">Project Link (URL)</label>
+          <input type="url" id="project-link" class="admin-form-input" required placeholder="https://...">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label">Project Images (Slider)</label>
+          <div id="project-images-container"></div>
+          <button type="button" class="add-image-input-btn" id="add-img-input-btn">+ Add Image URL or Upload File</button>
+        </div>
+        <div class="admin-form-actions">
+          <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminModal()">Cancel</button>
+          <button type="submit" class="admin-btn admin-btn-primary">Save Project</button>
+        </div>
+      </form>
+    </div>
+  `;
+  adminModal.classList.add("active");
+
+  const container = document.getElementById("project-images-container");
+  container.appendChild(renderImageRow()); // At least one image row by default
+
+  document.getElementById("add-img-input-btn").addEventListener("click", () => {
+    container.appendChild(renderImageRow());
+  });
+
+  const projectForm = document.getElementById("project-form");
+  projectForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const titleVal = document.getElementById("project-title").value;
+    const catVal = document.getElementById("project-category").value;
+    const linkVal = document.getElementById("project-link").value;
+    
+    const imageInputs = container.querySelectorAll(".project-image-url");
+    const imagesVal = [];
+    imageInputs.forEach(input => {
+      if (input.value.trim() !== "") imagesVal.push(input.value.trim());
+    });
+
+    if (imagesVal.length === 0) {
+      alert("Please specify at least one project image!");
+      return;
+    }
+
+    const newProject = {
+      id: "project-" + Date.now(),
+      title: titleVal,
+      category: catVal,
+      link: linkVal,
+      images: imagesVal
+    };
+
+    projects.push(newProject);
+    localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+    renderProjects();
+    closeAdminModal();
+  });
+};
+
+window.openEditProject = function(id) {
+  const project = projects.find(p => p.id === id);
+  if (!project || !adminModal) return;
+
+  adminModal.innerHTML = `
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Edit Project</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal()">&times;</button>
+      </div>
+      <form id="project-form">
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="project-title">Project Title</label>
+          <input type="text" id="project-title" class="admin-form-input" required value="${project.title}">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="project-category">Category</label>
+          <select id="project-category" class="admin-form-select" required>
+            <option value="Web design" ${project.category === 'Web design' ? 'selected' : ''}>Web design</option>
+            <option value="MERN Stack" ${project.category === 'MERN Stack' ? 'selected' : ''}>MERN Stack</option>
+            <option value="Web development" ${project.category === 'Web development' ? 'selected' : ''}>Web development</option>
+          </select>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="project-link">Project Link (URL)</label>
+          <input type="url" id="project-link" class="admin-form-input" required value="${project.link}">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label">Project Images (Slider)</label>
+          <div id="project-images-container"></div>
+          <button type="button" class="add-image-input-btn" id="add-img-input-btn">+ Add Image URL or Upload File</button>
+        </div>
+        <div class="admin-form-actions">
+          <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminModal()">Cancel</button>
+          <button type="submit" class="admin-btn admin-btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  `;
+  adminModal.classList.add("active");
+
+  const container = document.getElementById("project-images-container");
+  if (project.images && project.images.length > 0) {
+    project.images.forEach(img => {
+      container.appendChild(renderImageRow(img));
+    });
+  } else {
+    container.appendChild(renderImageRow());
+  }
+
+  document.getElementById("add-img-input-btn").addEventListener("click", () => {
+    container.appendChild(renderImageRow());
+  });
+
+  const projectForm = document.getElementById("project-form");
+  projectForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    project.title = document.getElementById("project-title").value;
+    project.category = document.getElementById("project-category").value;
+    project.link = document.getElementById("project-link").value;
+    
+    const imageInputs = container.querySelectorAll(".project-image-url");
+    const imagesVal = [];
+    imageInputs.forEach(input => {
+      if (input.value.trim() !== "") imagesVal.push(input.value.trim());
+    });
+
+    if (imagesVal.length === 0) {
+      alert("Please specify at least one project image!");
+      return;
+    }
+
+    project.images = imagesVal;
+    localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+    renderProjects();
+    closeAdminModal();
+  });
+};
+
+window.deleteProject = function(id) {
+  if (confirm("Are you sure you want to delete this project?")) {
+    projects = projects.filter(p => p.id !== id);
+    localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+    renderProjects();
+  }
+};
+
+// Blog CRUD Operations
+window.openAddBlog = function() {
+  if (!adminModal) return;
+
+  adminModal.innerHTML = `
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Add New Blog Post</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal()">&times;</button>
+      </div>
+      <form id="blog-form">
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="blog-heading">Heading</label>
+          <input type="text" id="blog-heading" class="admin-form-input" required placeholder="e.g. Design conferences in 2026">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="blog-category">Category</label>
+          <input type="text" id="blog-category" class="admin-form-input" required value="Design" placeholder="e.g. Design, Tech">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="blog-image">Blog Image</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" id="blog-image" class="admin-form-input" required placeholder="Image URL or upload file">
+            <div class="file-upload-wrapper" style="width: auto; flex-shrink: 0;">
+              <button type="button" class="file-upload-btn" style="padding: 10px;"><ion-icon name="cloud-upload-outline"></ion-icon></button>
+              <input type="file" id="blog-file-input" class="file-upload-input" accept="image/*">
+            </div>
+          </div>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="blog-description">Description</label>
+          <textarea id="blog-description" class="admin-form-textarea" required placeholder="Write a short blog post content..."></textarea>
+        </div>
+        <div class="admin-form-actions">
+          <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminModal()">Cancel</button>
+          <button type="submit" class="admin-btn admin-btn-primary">Save Blog</button>
+        </div>
+      </form>
+    </div>
+  `;
+  adminModal.classList.add("active");
+
+  const fileInput = document.getElementById("blog-file-input");
+  const textInput = document.getElementById("blog-image");
+  fileInput.addEventListener('change', function() {
+    window.compressAndUpload(this.files[0], (dataUrl) => {
+      textInput.value = dataUrl;
+    });
+  });
+
+  const blogForm = document.getElementById("blog-form");
+  blogForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const headingVal = document.getElementById("blog-heading").value;
+    const catVal = document.getElementById("blog-category").value;
+    const imageVal = document.getElementById("blog-image").value;
+    const descVal = document.getElementById("blog-description").value;
+
+    const now = new Date();
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const dateStr = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+    const datetimeStr = now.toISOString().split('T')[0];
+
+    const newBlog = {
+      id: "blog-" + Date.now(),
+      title: headingVal,
+      category: catVal,
+      date: dateStr,
+      datetime: datetimeStr,
+      description: descVal,
+      image: imageVal
+    };
+
+    blogs.push(newBlog);
+    localStorage.setItem('portfolio_blogs', JSON.stringify(blogs));
+    renderBlogs();
+    closeAdminModal();
+  });
+};
+
+window.openEditBlog = function(id) {
+  const blog = blogs.find(b => b.id === id);
+  if (!blog || !adminModal) return;
+
+  adminModal.innerHTML = `
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Edit Blog Post</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal()">&times;</button>
+      </div>
+      <form id="blog-form">
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="blog-heading">Heading</label>
+          <input type="text" id="blog-heading" class="admin-form-input" required value="${blog.title}">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="blog-category">Category</label>
+          <input type="text" id="blog-category" class="admin-form-input" required value="${blog.category}">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="blog-image">Blog Image</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" id="blog-image" class="admin-form-input" required value="${blog.image}">
+            <div class="file-upload-wrapper" style="width: auto; flex-shrink: 0;">
+              <button type="button" class="file-upload-btn" style="padding: 10px;"><ion-icon name="cloud-upload-outline"></ion-icon></button>
+              <input type="file" id="blog-file-input" class="file-upload-input" accept="image/*">
+            </div>
+          </div>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="blog-description">Description</label>
+          <textarea id="blog-description" class="admin-form-textarea" required>${blog.description}</textarea>
+        </div>
+        <div class="admin-form-actions">
+          <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminModal()">Cancel</button>
+          <button type="submit" class="admin-btn admin-btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  `;
+  adminModal.classList.add("active");
+
+  const fileInput = document.getElementById("blog-file-input");
+  const textInput = document.getElementById("blog-image");
+  fileInput.addEventListener('change', function() {
+    window.compressAndUpload(this.files[0], (dataUrl) => {
+      textInput.value = dataUrl;
+    });
+  });
+
+  const blogForm = document.getElementById("blog-form");
+  blogForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    blog.title = document.getElementById("blog-heading").value;
+    blog.category = document.getElementById("blog-category").value;
+    blog.image = document.getElementById("blog-image").value;
+    blog.description = document.getElementById("blog-description").value;
+
+    localStorage.setItem('portfolio_blogs', JSON.stringify(blogs));
+    renderBlogs();
+    closeAdminModal();
+  });
+};
+
+window.deleteBlog = function(id) {
+  if (confirm("Are you sure you want to delete this blog post?")) {
+    blogs = blogs.filter(b => b.id !== id);
+    localStorage.setItem('portfolio_blogs', JSON.stringify(blogs));
+    renderBlogs();
+  }
+};
+
+// Custom select variables & initialization
+const select = document.querySelector("[data-select]");
+const selectItems = document.querySelectorAll("[data-select-item]");
+const selectValue = document.querySelector("[data-selecct-value]");
+const filterBtn = document.querySelectorAll("[data-filter-btn]");
+
+if (select) {
+  select.addEventListener("click", function () { elementToggleFunc(this); });
+}
+
+// Add event in all select items
+for (let i = 0; i < selectItems.length; i++) {
+  selectItems[i].addEventListener("click", function () {
+    let selectedValue = this.innerText.toLowerCase();
+    if (selectValue) selectValue.innerText = this.innerText;
+    elementToggleFunc(select);
+    filterFunc(selectedValue);
+  });
+}
+
+// Filter functionality
+const filterFunc = function (selectedValue) {
+  const filterItems = document.querySelectorAll("[data-filter-item]");
+  for (let i = 0; i < filterItems.length; i++) {
+    if (selectedValue === "all") {
+      filterItems[i].classList.add("active");
+    } else if (selectedValue === filterItems[i].dataset.category) {
+      filterItems[i].classList.add("active");
+    } else {
+      filterItems[i].classList.remove("active");
+    }
+  }
+}
+
+// Add event in all filter button items for large screen
+if (filterBtn.length > 0) {
+  let lastClickedBtn = filterBtn[0];
+
+  for (let i = 0; i < filterBtn.length; i++) {
+    filterBtn[i].addEventListener("click", function () {
+      let selectedValue = this.innerText.toLowerCase();
+      if (selectValue) selectValue.innerText = this.innerText;
+      filterFunc(selectedValue);
+
+      if (lastClickedBtn) lastClickedBtn.classList.remove("active");
+      this.classList.add("active");
+      lastClickedBtn = this;
+    });
+  }
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PROJECT CAROUSEL  –  hover-to-play, mouseleave-to-reset
-// [data-carousel] is the .carousel-track <div> inside each .project-img figure
+// PROJECT CAROUSEL – hover-to-play, mouseleave-to-reset
 // ─────────────────────────────────────────────────────────────────────────────
-
-(function initCarousels() {
-  'use strict';
-
+function initCarousels() {
   const tracks = document.querySelectorAll('[data-carousel]');
 
   tracks.forEach(function (track) {
+    // Prevent double initialization if already cloned
+    if (track.dataset.carouselInitialized === "true") return;
 
-    // Slides are direct <img> children of the track div
     const slides = Array.from(track.querySelectorAll('.carousel-slide'));
     const originalCount = slides.length;
-    if (originalCount < 1) return;
+    if (originalCount <= 1) return; // Do not animate single image projects
 
     // ── Clone first slide for seamless loop ──
     const firstClone = slides[0].cloneNode(true);
     track.appendChild(firstClone);
+    
+    // Mark as initialized
+    track.dataset.carouselInitialized = "true";
 
     // Dots live in a sibling div inside the same parent <figure>
-    const figure = track.parentElement;           // .project-img <figure>
+    const figure = track.parentElement;
     const dots = figure ? Array.from(figure.querySelectorAll('.carousel-dot')) : [];
-    // Hover trigger = nearest <a> ancestor (the project card link)
     const trigger = track.closest('a') || track;
 
     let currentIndex = 0;
     let timer = null;
     let isTransitioning = false;
 
-    // ── Preload all images to prevent flicker ──
+    // Preload
     slides.forEach(function (slide) {
       const img = new Image();
       img.src = slide.src;
     });
 
-    // ── Jump to slide at given index (Seamless loop logic) ──
     function goTo(index, animate = true) {
-      // Remove active from current dot
       if (dots[currentIndex % originalCount]) {
         dots[currentIndex % originalCount].classList.remove('active');
       }
@@ -213,12 +970,10 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
       track.style.transform = `translateX(-${currentIndex * 100}%)`;
 
-      // Update dots
       if (dots[currentIndex % originalCount]) {
         dots[currentIndex % originalCount].classList.add('active');
       }
 
-      // Handle the wrap-around jump after transition
       if (currentIndex === originalCount && animate) {
         isTransitioning = true;
         setTimeout(function () {
@@ -226,11 +981,10 @@ for (let i = 0; i < navigationLinks.length; i++) {
           currentIndex = 0;
           track.style.transform = `translateX(0%)`;
           isTransitioning = false;
-        }, 300); // Match CSS transition time
+        }, 300);
       }
     }
 
-    // ── Start autoplay ──
     function startPlay() {
       if (timer) return;
       if (figure) figure.classList.add('is-playing');
@@ -241,18 +995,60 @@ for (let i = 0; i < navigationLinks.length; i++) {
       }, 1000);
     }
 
-    // ── Stop autoplay and reset to first slide ──
     function stopPlay() {
       clearInterval(timer);
       timer = null;
       if (figure) figure.classList.remove('is-playing');
       isTransitioning = false;
-      goTo(0, false); // Reset without animation to avoid "back-sliding"
+      goTo(0, false);
     }
 
     trigger.addEventListener('mouseenter', startPlay);
     trigger.addEventListener('mouseleave', stopPlay);
-
   });
+}
 
-}());
+// Initialize on page load
+document.addEventListener("DOMContentLoaded", () => {
+  renderProjects();
+  renderBlogs();
+  checkAdminStatus();
+
+  // Attach plus button triggers
+  const addProjectBtn = document.getElementById("add-project-btn");
+  if (addProjectBtn) {
+    addProjectBtn.addEventListener("click", () => {
+      executeWithAuth(window.openAddProject);
+    });
+  }
+
+  const addBlogBtn = document.getElementById("add-blog-btn");
+  if (addBlogBtn) {
+    addBlogBtn.addEventListener("click", () => {
+      executeWithAuth(window.openAddBlog);
+    });
+  }
+});
+
+// Fallback initialization check in case DOMContentLoaded already fired
+if (document.readyState === "interactive" || document.readyState === "complete") {
+  renderProjects();
+  renderBlogs();
+  checkAdminStatus();
+  
+  const addProjectBtn = document.getElementById("add-project-btn");
+  if (addProjectBtn && !addProjectBtn.dataset.listenerAdded) {
+    addProjectBtn.addEventListener("click", () => {
+      executeWithAuth(window.openAddProject);
+    });
+    addProjectBtn.dataset.listenerAdded = "true";
+  }
+
+  const addBlogBtn = document.getElementById("add-blog-btn");
+  if (addBlogBtn && !addBlogBtn.dataset.listenerAdded) {
+    addBlogBtn.addEventListener("click", () => {
+      executeWithAuth(window.openAddBlog);
+    });
+    addBlogBtn.dataset.listenerAdded = "true";
+  }
+}

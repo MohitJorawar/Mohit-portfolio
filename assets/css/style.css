@@ -2215,7 +2215,394 @@ textarea.form-input::-webkit-resizer {
 
 }
 
+/*-----------------------------------*\
+  #ADMIN & MODAL CUSTOM STYLES
+\*-----------------------------------*/
 
+/* Plus Button next to section titles */
+.add-btn {
+  background: var(--border-gradient-onyx);
+  color: var(--orange-yellow-crayola);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  box-shadow: var(--shadow-2);
+  transition: var(--transition-1);
+  position: relative;
+  z-index: 1;
+  border: 1px solid var(--jet);
+}
 
+.add-btn::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  background: var(--bg-gradient-jet);
+  border-radius: inherit;
+  z-index: -1;
+  transition: var(--transition-1);
+}
+
+.add-btn:hover {
+  background: var(--bg-gradient-yellow-1);
+  transform: scale(1.1);
+}
+
+.add-btn:hover::before {
+  background: var(--bg-gradient-yellow-2);
+}
+
+/* Admin Bar style at top of page */
+.admin-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--jet);
+  color: var(--white-1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 24px;
+  font-size: var(--fs-7);
+  z-index: 1000;
+  box-shadow: var(--shadow-1);
+  font-family: var(--ff-poppins);
+}
+
+.admin-bar span {
+  font-weight: var(--fw-500);
+  color: var(--orange-yellow-crayola);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-bar .logout-btn {
+  background: var(--border-gradient-onyx);
+  color: var(--white-2);
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: var(--fs-8);
+  font-weight: var(--fw-500);
+  transition: var(--transition-1);
+  border: 1px solid var(--jet);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-bar .logout-btn:hover {
+  color: var(--orange-yellow-crayola);
+  border-color: var(--orange-yellow-crayola);
+}
+
+body.admin-mode-active {
+  padding-top: 48px;
+}
+
+/* Admin Modal Overlay */
+.admin-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 2000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.admin-modal-content {
+  background: var(--eerie-black-2);
+  border: 1px solid var(--jet);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  padding: 24px;
+  box-shadow: var(--shadow-5);
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  z-index: 2001;
+}
+
+.admin-modal-overlay.active .admin-modal-content {
+  transform: translateY(0);
+}
+
+.admin-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--jet);
+  padding-bottom: 12px;
+}
+
+.admin-modal-title {
+  color: var(--white-1);
+  font-size: var(--fs-2);
+  font-weight: var(--fw-600);
+}
+
+.admin-modal-close {
+  color: var(--white-2);
+  font-size: 28px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.admin-modal-close:hover {
+  color: var(--orange-yellow-crayola);
+}
+
+/* Form Fields */
+.admin-form-group {
+  margin-bottom: 16px;
+}
+
+.admin-form-label {
+  display: block;
+  color: var(--light-gray);
+  font-size: var(--fs-7);
+  font-weight: var(--fw-500);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.admin-form-input, 
+.admin-form-select, 
+.admin-form-textarea {
+  background: var(--onyx);
+  border: 1px solid var(--jet);
+  color: var(--white-1);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: var(--fs-6);
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--ff-poppins);
+}
+
+.admin-form-input:focus, 
+.admin-form-select:focus, 
+.admin-form-textarea:focus {
+  border-color: var(--orange-yellow-crayola);
+  outline: none;
+}
+
+.admin-form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Dynamic Image Inputs for Projects */
+.admin-image-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.admin-image-item .admin-form-input {
+  flex: 1;
+}
+
+.remove-image-btn {
+  background: transparent;
+  color: #ff5555;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.remove-image-btn:hover {
+  color: #ff8888;
+}
+
+.add-image-input-btn {
+  background: transparent;
+  color: var(--orange-yellow-crayola);
+  border: 1px dashed var(--orange-yellow-crayola);
+  border-radius: 8px;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: var(--fs-7);
+  cursor: pointer;
+  margin-top: 6px;
+  transition: var(--transition-1);
+  display: block;
+}
+
+.add-image-input-btn:hover {
+  background: rgba(255, 219, 112, 0.1);
+}
+
+/* Actions panel in forms */
+.admin-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.admin-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: var(--fs-6);
+  font-weight: var(--fw-500);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--transition-1);
+}
+
+.admin-btn-secondary {
+  background: transparent;
+  border-color: var(--jet);
+  color: var(--white-2);
+}
+
+.admin-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.admin-btn-primary {
+  background: var(--text-gradient-yellow);
+  color: var(--smoky-black);
+  border: none;
+}
+
+.admin-btn-primary:hover {
+  filter: brightness(1.15);
+}
+
+/* File Upload input formatting */
+.file-upload-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.file-upload-btn {
+  border: 1px solid var(--jet);
+  color: var(--white-2);
+  background: var(--onyx);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-1);
+}
+
+.file-upload-btn:hover {
+  border-color: var(--orange-yellow-crayola);
+  color: var(--orange-yellow-crayola);
+}
+
+.file-upload-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* Card Controls overlay for Edit/Delete */
+.card-admin-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+  gap: 8px;
+  z-index: 100;
+}
+
+body.admin-mode-active .card-admin-controls {
+  display: flex;
+}
+
+.card-control-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(24, 24, 24, 0.9);
+  color: var(--white-1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--jet);
+  cursor: pointer;
+  transition: var(--transition-1);
+  font-size: 16px;
+}
+
+.card-control-btn:hover {
+  transform: scale(1.15);
+}
+
+.card-control-btn.edit {
+  color: var(--orange-yellow-crayola);
+}
+
+.card-control-btn.edit:hover {
+  background: var(--orange-yellow-crayola);
+  color: var(--smoky-black);
+  border-color: var(--orange-yellow-crayola);
+}
+
+.card-control-btn.delete {
+  color: #ff5555;
+}
+
+.card-control-btn.delete:hover {
+  background: #ff5555;
+  color: var(--white-1);
+  border-color: #ff5555;
+}
+
+/* Align title and action buttons on the same line in article headers */
+article header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+article header .article-title {
+  margin-bottom: 0;
+}
 
 /* Duplicate carousel styles removed — see #PROJECT CAROUSEL section above */

@@ -529,7 +529,7 @@ function renderImageRow(url = '') {
     <input type="text" class="admin-form-input project-image-url" required value="${url}" placeholder="Image URL or upload file">
     <div class="file-upload-wrapper" style="width: auto; flex-shrink: 0;">
       <button type="button" class="file-upload-btn" style="padding: 10px;"><ion-icon name="cloud-upload-outline"></ion-icon></button>
-      <input type="file" class="file-upload-input" accept="image/*">
+      <input type="file" class="file-upload-input" accept="image/*" multiple>
     </div>
     <button type="button" class="remove-image-btn" title="Remove image slide"><ion-icon name="close-circle-outline"></ion-icon></button>
   `;
@@ -537,9 +537,35 @@ function renderImageRow(url = '') {
   const fileInput = row.querySelector('.file-upload-input');
   const textInput = row.querySelector('.project-image-url');
   fileInput.addEventListener('change', function() {
-    window.compressAndUpload(this.files[0], (dataUrl) => {
-      textInput.value = dataUrl;
-    });
+    if (this.files && this.files.length > 0) {
+      textInput.value = "";
+      textInput.placeholder = "Uploading...";
+      textInput.readOnly = true;
+      window.compressAndUpload(this.files[0], (dataUrl) => {
+        textInput.value = dataUrl;
+        textInput.placeholder = "Image URL or upload file";
+        textInput.readOnly = false;
+      });
+      
+      const container = row.parentElement;
+      if (container && this.files.length > 1) {
+        for (let i = 1; i < this.files.length; i++) {
+          const newRow = renderImageRow();
+          container.appendChild(newRow);
+          const newTextInput = newRow.querySelector('.project-image-url');
+          newTextInput.value = "";
+          newTextInput.placeholder = "Uploading...";
+          newTextInput.readOnly = true;
+          
+          const fileToUpload = this.files[i];
+          window.compressAndUpload(fileToUpload, (dataUrl) => {
+            newTextInput.value = dataUrl;
+            newTextInput.placeholder = "Image URL or upload file";
+            newTextInput.readOnly = false;
+          });
+        }
+      }
+    }
   });
   
   row.querySelector('.remove-image-btn').addEventListener('click', function() {
@@ -548,6 +574,45 @@ function renderImageRow(url = '') {
   
   return row;
 }
+
+window.handleBulkImageUpload = function(files, container) {
+  if (!files || files.length === 0) return;
+  
+  const rows = container.querySelectorAll('.admin-image-item');
+  let emptyRows = [];
+  rows.forEach(row => {
+    const input = row.querySelector('.project-image-url');
+    if (input && input.value.trim() === '') {
+      emptyRows.push(row);
+    }
+  });
+
+  let emptyRowIndex = 0;
+  Array.from(files).forEach(file => {
+    let row;
+    let textInput;
+    
+    if (emptyRowIndex < emptyRows.length) {
+      row = emptyRows[emptyRowIndex];
+      textInput = row.querySelector('.project-image-url');
+      emptyRowIndex++;
+    } else {
+      row = renderImageRow();
+      container.appendChild(row);
+      textInput = row.querySelector('.project-image-url');
+    }
+    
+    textInput.value = "";
+    textInput.placeholder = "Uploading...";
+    textInput.readOnly = true;
+    
+    window.compressAndUpload(file, (dataUrl) => {
+      textInput.value = dataUrl;
+      textInput.placeholder = "Image URL or upload file";
+      textInput.readOnly = false;
+    });
+  });
+};
 
 window.openAddProject = function() {
   if (!adminModal) return;
@@ -578,7 +643,16 @@ window.openAddProject = function() {
         <div class="admin-form-group">
           <label class="admin-form-label">Project Images (Slider)</label>
           <div id="project-images-container"></div>
-          <button type="button" class="add-image-input-btn" id="add-img-input-btn">+ Add Image URL or Upload File</button>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <button type="button" class="add-image-input-btn" id="add-img-input-btn" style="flex: 1; margin-top: 0;">+ Add Row</button>
+            <div class="file-upload-wrapper" style="flex: 1; display: block; width: 100%;">
+              <button type="button" class="add-image-input-btn" style="margin-top: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <ion-icon name="cloud-upload-outline" style="font-size: 16px;"></ion-icon>
+                Upload Multiple Images
+              </button>
+              <input type="file" id="bulk-image-upload" accept="image/*" multiple class="file-upload-input">
+            </div>
+          </div>
         </div>
         <div class="admin-form-actions">
           <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminModal()">Cancel</button>
@@ -595,6 +669,13 @@ window.openAddProject = function() {
   document.getElementById("add-img-input-btn").addEventListener("click", () => {
     container.appendChild(renderImageRow());
   });
+
+  const bulkUploadInput = document.getElementById("bulk-image-upload");
+  if (bulkUploadInput) {
+    bulkUploadInput.addEventListener("change", function() {
+      window.handleBulkImageUpload(this.files, container);
+    });
+  }
 
   const projectForm = document.getElementById("project-form");
   projectForm.addEventListener("submit", function(e) {
@@ -659,7 +740,16 @@ window.openEditProject = function(id) {
         <div class="admin-form-group">
           <label class="admin-form-label">Project Images (Slider)</label>
           <div id="project-images-container"></div>
-          <button type="button" class="add-image-input-btn" id="add-img-input-btn">+ Add Image URL or Upload File</button>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <button type="button" class="add-image-input-btn" id="add-img-input-btn" style="flex: 1; margin-top: 0;">+ Add Row</button>
+            <div class="file-upload-wrapper" style="flex: 1; display: block; width: 100%;">
+              <button type="button" class="add-image-input-btn" style="margin-top: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <ion-icon name="cloud-upload-outline" style="font-size: 16px;"></ion-icon>
+                Upload Multiple Images
+              </button>
+              <input type="file" id="bulk-image-upload" accept="image/*" multiple class="file-upload-input">
+            </div>
+          </div>
         </div>
         <div class="admin-form-actions">
           <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminModal()">Cancel</button>
@@ -682,6 +772,13 @@ window.openEditProject = function(id) {
   document.getElementById("add-img-input-btn").addEventListener("click", () => {
     container.appendChild(renderImageRow());
   });
+
+  const bulkUploadInput = document.getElementById("bulk-image-upload");
+  if (bulkUploadInput) {
+    bulkUploadInput.addEventListener("change", function() {
+      window.handleBulkImageUpload(this.files, container);
+    });
+  }
 
   const projectForm = document.getElementById("project-form");
   projectForm.addEventListener("submit", function(e) {

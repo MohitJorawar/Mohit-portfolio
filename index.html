@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -28,8 +28,11 @@
 
       <div class="sidebar-info">
 
-        <figure class="avatar-box">
-          <img src="./assets/images/main-avatar.jpg" alt="Mohit Jorawar" width="80">
+        <figure class="avatar-box" id="avatar-box">
+          <img src="./assets/images/main-avatar.jpg" alt="Mohit Jorawar" width="80" id="user-avatar" data-user-avatar>
+          <button class="avatar-edit-btn" id="avatar-edit-btn" onclick="executeWithAuth(window.openUpdateAvatarModal)" title="Update Profile Picture">
+            <ion-icon name="camera-outline"></ion-icon>
+          </button>
         </figure>
 
         <div class="info-content">
@@ -1420,6 +1423,8 @@
               <ion-icon name="paper-plane"></ion-icon>
               <span>Send Message</span>
             </button>
+
+            <div id="contact-form-status" class="form-status"></div>
 
           </form>
 

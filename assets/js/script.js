@@ -299,12 +299,33 @@ const defaultBlogs = [
   }
 ];
 
-// Load arrays from LocalStorage (or set default if first time)
+// Default initial data if LocalStorage is empty
+const defaultCategories = ["Web design", "MERN Stack", "Web development"];
+let categories = JSON.parse(localStorage.getItem('portfolio_categories'));
+if (!categories || !Array.isArray(categories) || categories.length === 0) {
+  categories = defaultCategories;
+  localStorage.setItem('portfolio_categories', JSON.stringify(categories));
+}
+
 let projects = JSON.parse(localStorage.getItem('portfolio_projects'));
 if (!projects || !Array.isArray(projects)) {
   projects = defaultProjects;
   localStorage.setItem('portfolio_projects', JSON.stringify(projects));
 }
+
+function normalizeProjects() {
+  projects.forEach(p => {
+    if (!Array.isArray(p.categories)) {
+      if (p.category) {
+        p.categories = p.category.split(',').map(c => c.trim()).filter(Boolean);
+      } else {
+        p.categories = ["Web development"];
+      }
+    }
+    p.category = p.categories.join(', ');
+  });
+}
+normalizeProjects();
 
 let blogs = JSON.parse(localStorage.getItem('portfolio_blogs'));
 if (!blogs || !Array.isArray(blogs)) {
@@ -321,13 +342,16 @@ function renderProjects() {
 
   const isAdmin = sessionStorage.getItem('portfolio_admin') === 'true';
 
+  normalizeProjects();
   projectList.innerHTML = "";
 
   projects.forEach((project, index) => {
     const li = document.createElement("li");
     li.className = "project-item active";
     li.setAttribute("data-filter-item", "");
-    li.setAttribute("data-category", project.category.toLowerCase());
+    
+    const catList = Array.isArray(project.categories) ? project.categories : [project.category || "Web development"];
+    li.setAttribute("data-categories", catList.join(',').toLowerCase());
     li.setAttribute("data-index", index);
 
     const hasCarousel = project.images && project.images.length > 1;
@@ -376,7 +400,7 @@ function renderProjects() {
         </figure>
 
         <h3 class="project-title">${project.title}</h3>
-        <p class="project-category">${project.category}</p>
+        <p class="project-category">${catList.join(' • ')}</p>
       </a>
     `;
 
@@ -429,10 +453,7 @@ function renderProjects() {
   });
 
   // Re-run filtering and carousels
-  let activeCategory = document.querySelector("[data-selecct-value]")?.textContent.trim().toLowerCase() || "all";
-  if (activeCategory === "select category" || !activeCategory) {
-    activeCategory = "all";
-  }
+  let activeCategory = document.querySelector(".filter-item .active")?.textContent.trim().toLowerCase() || "all";
   filterFunc(activeCategory);
   initCarousels();
 }
@@ -522,8 +543,11 @@ function checkAdminStatus() {
     const bar = document.createElement("div");
     bar.className = "admin-bar";
     bar.innerHTML = `
-      <span><ion-icon name="lock-open-outline" style="display:inline-block; font-size:16px; vertical-align:middle;"></ion-icon> Admin Mode Active (Drag cards to reorder)</span>
+      <span><ion-icon name="lock-open-outline" style="display:inline-block; font-size:16px; vertical-align:middle;"></ion-icon> Admin Mode Active</span>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="logout-btn" onclick="executeWithAuth(window.openManageCategoriesModal)" title="Manage Categories">
+          <ion-icon name="options-outline"></ion-icon> Categories
+        </button>
         <button class="logout-btn" onclick="executeWithAuth(window.openUpdateAvatarModal)" title="Update Profile Picture">
           <ion-icon name="camera-outline"></ion-icon> Profile Pic
         </button>
@@ -539,6 +563,8 @@ function checkAdminStatus() {
   } else {
     body.classList.remove("admin-mode-active");
   }
+
+  renderCategories();
 }
 
 window.logoutAdmin = function() {
@@ -850,6 +876,19 @@ window.handleBulkImageUpload = function(files, container) {
   });
 };
 
+function renderCategoryCheckboxes(selectedArray = []) {
+  return `
+    <div class="category-checkbox-grid">
+      ${categories.map(cat => `
+        <label class="category-checkbox-label">
+          <input type="checkbox" name="project-category-cb" value="${cat}" ${selectedArray.includes(cat) ? 'checked' : ''}>
+          <span>${cat}</span>
+        </label>
+      `).join('')}
+    </div>
+  `;
+}
+
 window.openAddProject = function() {
   if (!adminModal) return;
 
@@ -865,12 +904,8 @@ window.openAddProject = function() {
           <input type="text" id="project-title" class="admin-form-input" required placeholder="e.g. Portfolio Website">
         </div>
         <div class="admin-form-group">
-          <label class="admin-form-label" for="project-category">Category</label>
-          <select id="project-category" class="admin-form-select" required>
-            <option value="Web design">Web design</option>
-            <option value="MERN Stack">MERN Stack</option>
-            <option value="Web development">Web development</option>
-          </select>
+          <label class="admin-form-label">Categories (Select one or more)</label>
+          ${renderCategoryCheckboxes(["Web development"])}
         </div>
         <div class="admin-form-group">
           <label class="admin-form-label" for="project-link">Project Link (URL)</label>
@@ -900,7 +935,7 @@ window.openAddProject = function() {
   adminModal.classList.add("active");
 
   const container = document.getElementById("project-images-container");
-  container.appendChild(renderImageRow()); // At least one image row by default
+  container.appendChild(renderImageRow());
 
   document.getElementById("add-img-input-btn").addEventListener("click", () => {
     container.appendChild(renderImageRow());
@@ -917,7 +952,11 @@ window.openAddProject = function() {
   projectForm.addEventListener("submit", function(e) {
     e.preventDefault();
     const titleVal = document.getElementById("project-title").value;
-    const catVal = document.getElementById("project-category").value;
+    const checkedCb = Array.from(document.querySelectorAll('input[name="project-category-cb"]:checked')).map(cb => cb.value);
+    if (checkedCb.length === 0) {
+      alert("Please select at least one category!");
+      return;
+    }
     const linkVal = document.getElementById("project-link").value;
     
     const imageInputs = container.querySelectorAll(".project-image-url");
@@ -934,7 +973,8 @@ window.openAddProject = function() {
     const newProject = {
       id: "project-" + Date.now(),
       title: titleVal,
-      category: catVal,
+      categories: checkedCb,
+      category: checkedCb.join(', '),
       link: linkVal,
       images: imagesVal
     };
@@ -950,6 +990,8 @@ window.openEditProject = function(id) {
   const project = projects.find(p => p.id === id);
   if (!project || !adminModal) return;
 
+  const projectCats = Array.isArray(project.categories) ? project.categories : [project.category || "Web development"];
+
   adminModal.innerHTML = `
     <div class="admin-modal-content">
       <div class="admin-modal-header">
@@ -962,12 +1004,8 @@ window.openEditProject = function(id) {
           <input type="text" id="project-title" class="admin-form-input" required value="${project.title}">
         </div>
         <div class="admin-form-group">
-          <label class="admin-form-label" for="project-category">Category</label>
-          <select id="project-category" class="admin-form-select" required>
-            <option value="Web design" ${project.category === 'Web design' ? 'selected' : ''}>Web design</option>
-            <option value="MERN Stack" ${project.category === 'MERN Stack' ? 'selected' : ''}>MERN Stack</option>
-            <option value="Web development" ${project.category === 'Web development' ? 'selected' : ''}>Web development</option>
-          </select>
+          <label class="admin-form-label">Categories (Select one or more)</label>
+          ${renderCategoryCheckboxes(projectCats)}
         </div>
         <div class="admin-form-group">
           <label class="admin-form-label" for="project-link">Project Link (URL)</label>
@@ -1019,8 +1057,14 @@ window.openEditProject = function(id) {
   const projectForm = document.getElementById("project-form");
   projectForm.addEventListener("submit", function(e) {
     e.preventDefault();
+    const checkedCb = Array.from(document.querySelectorAll('input[name="project-category-cb"]:checked')).map(cb => cb.value);
+    if (checkedCb.length === 0) {
+      alert("Please select at least one category!");
+      return;
+    }
     project.title = document.getElementById("project-title").value;
-    project.category = document.getElementById("project-category").value;
+    project.categories = checkedCb;
+    project.category = checkedCb.join(', ');
     project.link = document.getElementById("project-link").value;
     
     const imageInputs = container.querySelectorAll(".project-image-url");
@@ -1039,6 +1083,117 @@ window.openEditProject = function(id) {
     renderProjects();
     closeAdminModal();
   });
+};
+
+window.openManageCategoriesModal = function() {
+  if (!adminModal) return;
+
+  adminModal.innerHTML = `
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Manage Categories</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal()">&times;</button>
+      </div>
+      
+      <div class="category-manager-list" style="margin-bottom: 20px;">
+        <label class="admin-form-label">Existing Categories</label>
+        <div id="cats-list-container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+          ${categories.map((cat, idx) => `
+            <div class="category-manage-item" style="display: flex; gap: 8px; align-items: center;">
+              <input type="text" class="admin-form-input cat-name-input" data-idx="${idx}" value="${cat}">
+              <button type="button" class="admin-btn admin-btn-secondary" onclick="saveCategoryName(${idx})" style="padding: 8px 12px;" title="Save Name">
+                <ion-icon name="checkmark-outline"></ion-icon>
+              </button>
+              <button type="button" class="admin-btn admin-btn-secondary" onclick="removeCategory(${idx})" style="padding: 8px 12px; color: #ff5555; border-color: rgba(255,85,85,0.3);" title="Delete Category">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <form id="add-category-form" style="border-top: 1px solid var(--jet); padding-top: 15px;">
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="new-cat-name">Add New Category</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="new-cat-name" class="admin-form-input" required placeholder="e.g. Full Stack, GenAI, Python">
+            <button type="submit" class="admin-btn admin-btn-primary" style="white-space: nowrap;">+ Add Category</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="admin-form-actions" style="margin-top: 20px;">
+        <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminModal()">Done</button>
+      </div>
+    </div>
+  `;
+  adminModal.classList.add("active");
+
+  const addCatForm = document.getElementById("add-category-form");
+  addCatForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const newName = document.getElementById("new-cat-name").value.trim();
+    if (!newName) return;
+    if (categories.some(c => c.toLowerCase() === newName.toLowerCase())) {
+      alert("Category already exists!");
+      return;
+    }
+    categories.push(newName);
+    localStorage.setItem('portfolio_categories', JSON.stringify(categories));
+    renderCategories();
+    window.openManageCategoriesModal();
+  });
+};
+
+window.saveCategoryName = function(idx) {
+  const inputs = document.querySelectorAll(".cat-name-input");
+  const input = Array.from(inputs).find(inp => parseInt(inp.dataset.idx) === idx);
+  if (!input) return;
+
+  const oldName = categories[idx];
+  const newName = input.value.trim();
+  if (!newName) {
+    alert("Category name cannot be empty!");
+    return;
+  }
+
+  if (oldName === newName) return;
+
+  categories[idx] = newName;
+  localStorage.setItem('portfolio_categories', JSON.stringify(categories));
+
+  projects.forEach(p => {
+    if (Array.isArray(p.categories)) {
+      p.categories = p.categories.map(c => c === oldName ? newName : c);
+      p.category = p.categories.join(', ');
+    }
+  });
+  localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+
+  renderCategories();
+  renderProjects();
+  window.openManageCategoriesModal();
+};
+
+window.removeCategory = function(idx) {
+  const catName = categories[idx];
+  if (confirm(`Delete category "${catName}"?`)) {
+    categories.splice(idx, 1);
+    localStorage.setItem('portfolio_categories', JSON.stringify(categories));
+
+    projects.forEach(p => {
+      if (Array.isArray(p.categories)) {
+        p.categories = p.categories.filter(c => c !== catName);
+        if (p.categories.length === 0) p.categories = ["Web development"];
+        p.category = p.categories.join(', ');
+      }
+    });
+    localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+
+    renderCategories();
+    renderProjects();
+    window.openManageCategoriesModal();
+  }
 };
 
 window.deleteProject = function(id) {
@@ -1201,56 +1356,92 @@ window.deleteBlog = function(id) {
   }
 };
 
-// Custom select variables & initialization
-const select = document.querySelector("[data-select]");
-const selectItems = document.querySelectorAll("[data-select-item]");
-const selectValue = document.querySelector("[data-selecct-value]");
-const filterBtn = document.querySelectorAll("[data-filter-btn]");
+function renderCategories() {
+  const filterList = document.querySelector(".filter-list");
+  const selectList = document.querySelector(".select-list");
+  const isAdmin = sessionStorage.getItem('portfolio_admin') === 'true';
 
-if (select) {
-  select.addEventListener("click", function () { elementToggleFunc(this); });
+  let currentActiveTab = document.querySelector(".filter-item .active")?.innerText.trim() || "All";
+
+  if (filterList) {
+    filterList.innerHTML = `
+      <li class="filter-item">
+        <button class="${currentActiveTab.toLowerCase() === 'all' ? 'active' : ''}" data-filter-btn>All</button>
+      </li>
+      ${categories.map(cat => `
+        <li class="filter-item">
+          <button class="${currentActiveTab.toLowerCase() === cat.toLowerCase() ? 'active' : ''}" data-filter-btn>${cat}</button>
+        </li>
+      `).join('')}
+      ${isAdmin ? `
+        <li class="filter-item">
+          <button class="manage-cats-btn" onclick="executeWithAuth(window.openManageCategoriesModal)" title="Manage Categories">
+            <ion-icon name="options-outline" style="vertical-align: middle; margin-right: 4px;"></ion-icon>+ Categories
+          </button>
+        </li>
+      ` : ''}
+    `;
+  }
+
+  if (selectList) {
+    selectList.innerHTML = `
+      <li class="select-item"><button data-select-item>All</button></li>
+      ${categories.map(cat => `
+        <li class="select-item"><button data-select-item>${cat}</button></li>
+      `).join('')}
+    `;
+  }
+
+  bindCategoryEvents();
 }
 
-// Add event in all select items
-for (let i = 0; i < selectItems.length; i++) {
-  selectItems[i].addEventListener("click", function () {
-    let selectedValue = this.innerText.toLowerCase();
-    if (selectValue) selectValue.innerText = this.innerText;
-    elementToggleFunc(select);
-    filterFunc(selectedValue);
+function bindCategoryEvents() {
+  const select = document.querySelector("[data-select]");
+  const selectItems = document.querySelectorAll("[data-select-item]");
+  const selectValue = document.querySelector("[data-selecct-value]");
+  const filterBtn = document.querySelectorAll("[data-filter-btn]");
+
+  if (select) {
+    select.onclick = function () { elementToggleFunc(this); };
+  }
+
+  selectItems.forEach(item => {
+    item.onclick = function () {
+      let selectedValue = this.innerText.toLowerCase();
+      if (selectValue) selectValue.innerText = this.innerText;
+      if (select) select.classList.remove("active");
+      filterFunc(selectedValue);
+    };
+  });
+
+  filterBtn.forEach(btn => {
+    btn.onclick = function () {
+      let selectedValue = this.innerText.toLowerCase();
+      if (selectValue) selectValue.innerText = this.innerText;
+      filterFunc(selectedValue);
+
+      filterBtn.forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+    };
   });
 }
 
 // Filter functionality
 const filterFunc = function (selectedValue) {
   const filterItems = document.querySelectorAll("[data-filter-item]");
+  const val = selectedValue.trim().toLowerCase();
+
   for (let i = 0; i < filterItems.length; i++) {
-    if (selectedValue === "all") {
-      filterItems[i].classList.add("active");
-    } else if (selectedValue === filterItems[i].dataset.category) {
+    const rawCategories = filterItems[i].getAttribute("data-categories") || "";
+    const projectCats = rawCategories.split(',').map(c => c.trim().toLowerCase());
+
+    if (val === "all" || projectCats.includes(val)) {
       filterItems[i].classList.add("active");
     } else {
       filterItems[i].classList.remove("active");
     }
   }
-}
-
-// Add event in all filter button items for large screen
-if (filterBtn.length > 0) {
-  let lastClickedBtn = filterBtn[0];
-
-  for (let i = 0; i < filterBtn.length; i++) {
-    filterBtn[i].addEventListener("click", function () {
-      let selectedValue = this.innerText.toLowerCase();
-      if (selectValue) selectValue.innerText = this.innerText;
-      filterFunc(selectedValue);
-
-      if (lastClickedBtn) lastClickedBtn.classList.remove("active");
-      this.classList.add("active");
-      lastClickedBtn = this;
-    });
-  }
-}
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PROJECT CAROUSEL – hover-to-play, mouseleave-to-reset
@@ -1344,6 +1535,7 @@ function initCarousels() {
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadUserAvatar();
+  renderCategories();
   renderProjects();
   renderBlogs();
   checkAdminStatus();
@@ -1367,6 +1559,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Fallback initialization check in case DOMContentLoaded already fired
 if (document.readyState === "interactive" || document.readyState === "complete") {
   loadUserAvatar();
+  renderCategories();
   renderProjects();
   renderBlogs();
   checkAdminStatus();

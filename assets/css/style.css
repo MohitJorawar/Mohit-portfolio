@@ -2716,3 +2716,58 @@ body.admin-mode-active .avatar-edit-btn {
     transform: rotate(360deg);
   }
 }
+
+/* Multi-category checkboxes in Admin Modals */
+.category-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  background: var(--eerie-black-2);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--jet);
+}
+
+.category-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--white-2);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--onyx);
+  transition: var(--transition-1);
+}
+
+.category-checkbox-label:hover {
+  background: var(--jet);
+  color: var(--orange-yellow-crayola);
+}
+
+.category-checkbox-label input[type="checkbox"] {
+  accent-color: var(--orange-yellow-crayola);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Manage categories button in filter list */
+.manage-cats-btn {
+  background: transparent;
+  color: var(--orange-yellow-crayola);
+  border: 1px dashed var(--orange-yellow-crayola);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition-1);
+  display: flex;
+  align-items: center;
+}
+
+.manage-cats-btn:hover {
+  background: var(--orange-yellow-crayola);
+  color: var(--smoky-black);
+}

@@ -30,7 +30,8 @@
 
         <figure class="avatar-box" id="avatar-box">
           <img src="./assets/images/main-avatar.jpg" alt="Mohit Jorawar" width="80" id="user-avatar" data-user-avatar>
-          <button class="avatar-edit-btn" id="avatar-edit-btn" onclick="executeWithAuth(window.openUpdateAvatarModal)" title="Update Profile Picture">
+          <button class="avatar-edit-btn" id="avatar-edit-btn" onclick="executeWithAuth(window.openUpdateAvatarModal)"
+            title="Update Profile Picture">
             <ion-icon name="camera-outline"></ion-icon>
           </button>
         </figure>
@@ -804,7 +805,7 @@
             </li>
 
             <li class="filter-item">
-              <button data-filter-btn>Web design</button>
+              <button data-filter-btn>Ecommerce</button>
             </li>
 
             <li class="filter-item">
@@ -836,7 +837,7 @@
               </li>
 
               <li class="select-item">
-                <button data-select-item>Web design</button>
+                <button data-select-item>Ecommerce</button>
               </li>
 
               <li class="select-item">
@@ -855,7 +856,7 @@
             HOW TO ADD A PROJECT CARD:
             Copy and paste the <li> block below inside the <ul class="project-list"> and fill in your details.
 
-            <li class="project-item active" data-filter-item data-category="web development">
+            <li class="project-item active" data-filter-item data-categories="web development" data-category="web development">
               <a href="YOUR_PROJECT_LINK" target="_blank">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
@@ -868,14 +869,15 @@
               </a>
             </li>
 
-            Supported categories: "web design" | "web development" | "mern stack"
+            Supported categories: "Ecommerce" | "web development" | "mern stack"
           -->
           <ul class="project-list">
 
             <!-- ====== Fitness Gym Website ====== -->
 
             <!-- ====== Bowl Bachan ====== -->
-            <li class="project-item active" data-filter-item data-category="web development">
+            <li class="project-item active" data-filter-item data-categories="web development, ecommerce"
+              data-category="web development, ecommerce">
               <a href="https://mohitjorawar.github.io/Bowl-Bachan/" target="_blank" rel="noopener noreferrer">
 
                 <figure class="project-img">
@@ -914,14 +916,15 @@
                 </figure>
 
                 <h3 class="project-title">Ecommerce Restaurant Website</h3>
-                <p class="project-category">Web development</p>
+                <p class="project-category">Web development • Ecommerce</p>
 
               </a>
             </li>
 
 
             <!-- ====== Food Website ====== -->
-            <li class="project-item active" data-filter-item data-category="web development">
+            <li class="project-item active" data-filter-item data-categories="web development, ecommerce"
+              data-category="web development, ecommerce">
               <a href="https://mohitjorawar.github.io/E-commerce-food-Website/" target="_blank"
                 rel="noopener noreferrer">
 
@@ -971,13 +974,14 @@
                 </figure>
 
                 <h3 class="project-title">Ecommerce Food Website</h3>
-                <p class="project-category">Web development</p>
+                <p class="project-category">Web development • Ecommerce</p>
 
               </a>
             </li>
 
             <!-- ====== space project ====== -->
-            <li class="project-item active" data-filter-item data-category="web development">
+            <li class="project-item active" data-filter-item data-categories="web development"
+              data-category="web development">
               <a href="https://mohitjorawar.github.io/Space-Project/" target="_blank" rel="noopener noreferrer">
 
                 <figure class="project-img">
@@ -1022,7 +1026,8 @@
 
 
             <!-- ====== Get Crafted project ====== -->
-            <li class="project-item active" data-filter-item data-category="MERN Stack">
+            <li class="project-item active" data-filter-item data-categories="mern stack, ecommerce"
+              data-category="mern stack, ecommerce">
               <a href="https://get-crafted.vercel.app/" target="_blank" rel="noopener noreferrer">
 
                 <figure class="project-img">
@@ -1078,13 +1083,13 @@
                 </figure>
 
                 <h3 class="project-title">Get Crafted Ecommerce website</h3>
-                <p class="project-category">MERN Stack</p>
+                <p class="project-category">MERN Stack • Ecommerce</p>
 
               </a>
             </li>
 
 
-            <li class="project-item active" data-filter-item data-category="mern stack">
+            <li class="project-item active" data-filter-item data-categories="mern stack" data-category="mern stack">
               <a href="https://website-gym-phi.vercel.app/" target="_blank" rel="noopener noreferrer">
 
                 <figure class="project-img">
@@ -1145,7 +1150,8 @@
 
 
             <!-- ====== Get crafted js ====== -->
-            <li class="project-item active" data-filter-item data-category="web development">
+            <li class="project-item active" data-filter-item data-categories="web development, ecommerce"
+              data-category="web development, ecommerce">
               <a href="https://mohitjorawar.github.io/Get-Creafted-js/" target="_blank" rel="noopener noreferrer">
 
                 <figure class="project-img">
@@ -1189,7 +1195,220 @@
                 </figure>
 
                 <h3 class="project-title">Ecommerce Get Crafted Website</h3>
-                <p class="project-category">Web development</p>
+                <p class="project-category">Web development • Ecommerce</p>
+
+              </a>
+            </li>
+
+            <!-- ====== Backend based Management System ====== -->
+            <li class="project-item active" data-filter-item data-categories="mern stack" data-category="mern stack">
+              <a href="https://keystone-field-managements-system.vercel.app/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+
+                  <!-- Carousel container — JS attaches hover listeners here -->
+                  <div class="carousel-track" data-carousel>
+
+                    <img class="carousel-slide active" src="./assets/images/projects/keystone-field-management/1.png"
+                      alt="Backend based Management System – slide 1" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/keystone-field-management/2.png"
+                      alt="Backend based Management System – slide 2" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/keystone-field-management/3.png"
+                      alt="Backend based Management System – slide 3" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/keystone-field-management/4.png"
+                      alt="Backend based Management System – slide 4" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/keystone-field-management/5.png"
+                      alt="Backend based Management System – slide 5" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/keystone-field-management/6.png"
+                      alt="Backend based Management System – slide 6" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/keystone-field-management/7.png"
+                      alt="Backend based Management System – slide 7" loading="lazy">
+
+                  </div>
+
+                  <!-- Dot indicators -->
+                  <div class="carousel-dots" aria-hidden="true">
+                    <span class="carousel-dot active"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                  </div>
+
+                  <!-- Eye icon overlay -->
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                </figure>
+
+                <h3 class="project-title">Backend based Management System</h3>
+                <p class="project-category">MERN Stack</p>
+
+              </a>
+            </li>
+
+            <!-- ====== Ecommerce Jwellery Website ====== -->
+            <li class="project-item active" data-filter-item data-categories="ecommerce" data-category="ecommerce">
+              <a href="https://jwellery-website-two.vercel.app/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+
+                  <!-- Carousel container — JS attaches hover listeners here -->
+                  <div class="carousel-track" data-carousel>
+
+                    <img class="carousel-slide active" src="./assets/images/projects/jaishree-jwellers/1.png"
+                      alt="Ecommerce Jwellery Website – slide 1" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/jaishree-jwellers/2.png"
+                      alt="Ecommerce Jwellery Website – slide 2" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/jaishree-jwellers/3.png"
+                      alt="Ecommerce Jwellery Website – slide 3" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/jaishree-jwellers/4.png"
+                      alt="Ecommerce Jwellery Website – slide 4" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/jaishree-jwellers/5.png"
+                      alt="Ecommerce Jwellery Website – slide 5" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/jaishree-jwellers/6.png"
+                      alt="Ecommerce Jwellery Website – slide 6" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/jaishree-jwellers/7.png"
+                      alt="Ecommerce Jwellery Website – slide 7" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/jaishree-jwellers/8.png"
+                      alt="Ecommerce Jwellery Website – slide 8" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/jaishree-jwellers/9.png"
+                      alt="Ecommerce Jwellery Website – slide 9" loading="lazy">
+
+                  </div>
+
+                  <!-- Dot indicators -->
+                  <div class="carousel-dots" aria-hidden="true">
+                    <span class="carousel-dot active"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                  </div>
+
+                  <!-- Eye icon overlay -->
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                </figure>
+
+                <h3 class="project-title">Ecommerce Jwellery Website</h3>
+                <p class="project-category">Ecommerce</p>
+
+              </a>
+            </li>
+
+            <!-- ====== Premium Jwellery Website ====== -->
+            <li class="project-item active" data-filter-item data-categories="ecommerce, mern stack"
+              data-category="ecommerce, mern stack">
+              <a href="https://frontend-ecvq.vercel.app/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+
+                  <!-- Carousel container — JS attaches hover listeners here -->
+                  <div class="carousel-track" data-carousel>
+
+                    <img class="carousel-slide active" src="./assets/images/projects/premium-jwellery/1.png"
+                      alt="Premium Jwellery Website – slide 1" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-jwellery/2.png"
+                      alt="Premium Jwellery Website – slide 2" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-jwellery/3.png"
+                      alt="Premium Jwellery Website – slide 3" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-jwellery/4.png"
+                      alt="Premium Jwellery Website – slide 4" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-jwellery/5.png"
+                      alt="Premium Jwellery Website – slide 5" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-jwellery/6.png"
+                      alt="Premium Jwellery Website – slide 6" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-jwellery/7.png"
+                      alt="Premium Jwellery Website – slide 7" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-jwellery/8.png"
+                      alt="Premium Jwellery Website – slide 8" loading="lazy">
+
+                  </div>
+
+                  <!-- Dot indicators -->
+                  <div class="carousel-dots" aria-hidden="true">
+                    <span class="carousel-dot active"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                  </div>
+
+                  <!-- Eye icon overlay -->
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                </figure>
+
+                <h3 class="project-title">Premium Jwellery Ecommerce Website</h3>
+                <p class="project-category">Ecommerce • MERN Stack</p>
+
+              </a>
+            </li>
+
+            <!-- ====== Premium Furniture Ecommerce Website ====== -->
+            <li class="project-item active" data-filter-item data-categories="ecommerce, mern stack" data-category="ecommerce, mern stack">
+              <a href="https://premium-zenkai-website.vercel.app/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+
+                  <!-- Carousel container — JS attaches hover listeners here -->
+                  <div class="carousel-track" data-carousel>
+
+                    <img class="carousel-slide active" src="./assets/images/projects/premium-furniture/1.png"
+                      alt="Premium Furniture Ecommerce Website – slide 1" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-furniture/2.png"
+                      alt="Premium Furniture Ecommerce Website – slide 2" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-furniture/3.png"
+                      alt="Premium Furniture Ecommerce Website – slide 3" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-furniture/4.png"
+                      alt="Premium Furniture Ecommerce Website – slide 4" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-furniture/5.png"
+                      alt="Premium Furniture Ecommerce Website – slide 5" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-furniture/6.png"
+                      alt="Premium Furniture Ecommerce Website – slide 6" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-furniture/7.png"
+                      alt="Premium Furniture Ecommerce Website – slide 7" loading="lazy">
+                    <img class="carousel-slide" src="./assets/images/projects/premium-furniture/8.png"
+                      alt="Premium Furniture Ecommerce Website – slide 8" loading="lazy">
+
+                  </div>
+
+                  <!-- Dot indicators -->
+                  <div class="carousel-dots" aria-hidden="true">
+                    <span class="carousel-dot active"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                  </div>
+
+                  <!-- Eye icon overlay -->
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                </figure>
+
+                <h3 class="project-title">Premium Furniture Ecommerce Website</h3>
+                <p class="project-category">Ecommerce • MERN Stack</p>
 
               </a>
             </li>

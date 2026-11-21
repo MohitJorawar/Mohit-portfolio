@@ -148,7 +148,8 @@ const defaultProjects = [
   {
     id: "project-bowl-bachan",
     title: "Ecommerce Restaurant Website",
-    category: "Web development",
+    category: "Web development, Ecommerce",
+    categories: ["Web development", "Ecommerce"],
     link: "https://mohitjorawar.github.io/Bowl-Bachan/",
     images: [
       "./assets/images/projects/bowl-bachan/1.png",
@@ -162,7 +163,8 @@ const defaultProjects = [
   {
     id: "project-food-website",
     title: "Ecommerce Food Website",
-    category: "Web development",
+    category: "Web development, Ecommerce",
+    categories: ["Web development", "Ecommerce"],
     link: "https://mohitjorawar.github.io/E-commerce-food-Website/",
     images: [
       "./assets/images/projects/food-website/2.png",
@@ -178,6 +180,7 @@ const defaultProjects = [
     id: "project-space",
     title: "Space Project",
     category: "Web development",
+    categories: ["Web development"],
     link: "https://mohitjorawar.github.io/Space-Project/",
     images: [
       "./assets/images/projects/space-project/1.png",
@@ -190,7 +193,8 @@ const defaultProjects = [
   {
     id: "project-get-crafted",
     title: "Get Crafted Ecommerce website",
-    category: "MERN Stack",
+    category: "MERN Stack, Ecommerce",
+    categories: ["MERN Stack", "Ecommerce"],
     link: "https://get-crafted.vercel.app/",
     images: [
       "./assets/images/projects/get-crafted/1.png",
@@ -210,6 +214,7 @@ const defaultProjects = [
     id: "project-fitness-gym",
     title: "Fitness Gym Website",
     category: "MERN Stack",
+    categories: ["MERN Stack"],
     link: "https://website-gym-phi.vercel.app/",
     images: [
       "./assets/images/projects/gym-website/1.png",
@@ -228,7 +233,8 @@ const defaultProjects = [
   {
     id: "project-get-crafted-js",
     title: "Ecommerce Get Crafted Website",
-    category: "Web development",
+    category: "Web development, Ecommerce",
+    categories: ["Web development", "Ecommerce"],
     link: "https://mohitjorawar.github.io/Get-Creafted-js/",
     images: [
       "./assets/images/projects/get-crafted-js/1.png",
@@ -238,6 +244,74 @@ const defaultProjects = [
       "./assets/images/projects/get-crafted-js/5.png",
       "./assets/images/projects/get-crafted-js/6.png",
       "./assets/images/projects/get-crafted-js/7.png"
+    ]
+  },
+  {
+    id: "project-keystone-management",
+    title: "Backend based Management System",
+    category: "MERN Stack",
+    categories: ["MERN Stack"],
+    link: "https://keystone-field-managements-system.vercel.app/",
+    images: [
+      "./assets/images/projects/keystone-field-management/1.png",
+      "./assets/images/projects/keystone-field-management/2.png",
+      "./assets/images/projects/keystone-field-management/3.png",
+      "./assets/images/projects/keystone-field-management/4.png",
+      "./assets/images/projects/keystone-field-management/5.png",
+      "./assets/images/projects/keystone-field-management/6.png",
+      "./assets/images/projects/keystone-field-management/7.png"
+    ]
+  },
+  {
+    id: "project-jaishree-jwellers",
+    title: "Ecommerce Jwellery Website",
+    category: "Ecommerce",
+    categories: ["Ecommerce"],
+    link: "https://jwellery-website-two.vercel.app/",
+    images: [
+      "./assets/images/projects/jaishree-jwellers/1.png",
+      "./assets/images/projects/jaishree-jwellers/2.png",
+      "./assets/images/projects/jaishree-jwellers/3.png",
+      "./assets/images/projects/jaishree-jwellers/4.png",
+      "./assets/images/projects/jaishree-jwellers/5.png",
+      "./assets/images/projects/jaishree-jwellers/6.png",
+      "./assets/images/projects/jaishree-jwellers/7.png",
+      "./assets/images/projects/jaishree-jwellers/8.png",
+      "./assets/images/projects/jaishree-jwellers/9.png"
+    ]
+  },
+  {
+    id: "project-premium-jwellery",
+    title: "Premium Jwellery Website",
+    category: "Ecommerce, MERN Stack",
+    categories: ["Ecommerce", "MERN Stack"],
+    link: "https://frontend-ecvq.vercel.app/",
+    images: [
+      "./assets/images/projects/premium-jwellery/1.png",
+      "./assets/images/projects/premium-jwellery/2.png",
+      "./assets/images/projects/premium-jwellery/3.png",
+      "./assets/images/projects/premium-jwellery/4.png",
+      "./assets/images/projects/premium-jwellery/5.png",
+      "./assets/images/projects/premium-jwellery/6.png",
+      "./assets/images/projects/premium-jwellery/7.png",
+      "./assets/images/projects/premium-jwellery/8.png"
+    ]
+  },
+  {
+    id: "project-premium-furniture",
+    title: "Premium Furniture Ecommerce Website",
+    category: "Ecommerce, MERN Stack",
+    categories: ["Ecommerce", "MERN Stack"],
+    link: "https://premium-zenkai-website.vercel.app/",
+    images: [
+      "./assets/images/projects/premium-furniture/1.png",
+      "./assets/images/projects/premium-furniture/2.png",
+      "./assets/images/projects/premium-furniture/3.png",
+      "./assets/images/projects/premium-furniture/4.png",
+      "./assets/images/projects/premium-furniture/5.png",
+      "./assets/images/projects/premium-furniture/6.png",
+      "./assets/images/projects/premium-furniture/7.png",
+      "./assets/images/projects/premium-furniture/8.png"
     ]
   }
 ];
@@ -300,17 +374,53 @@ const defaultBlogs = [
 ];
 
 // Default initial data if LocalStorage is empty
-const defaultCategories = ["Web design", "MERN Stack", "Web development"];
+const defaultCategories = ["Ecommerce", "MERN Stack", "Web development"];
 let categories = JSON.parse(localStorage.getItem('portfolio_categories'));
 if (!categories || !Array.isArray(categories) || categories.length === 0) {
   categories = defaultCategories;
   localStorage.setItem('portfolio_categories', JSON.stringify(categories));
+} else {
+  // Replace "Web design" with "Ecommerce" in existing saved categories
+  let catsUpdated = false;
+  const webDesignIdx = categories.findIndex(c => c.toLowerCase() === "web design");
+  if (webDesignIdx !== -1) {
+    categories[webDesignIdx] = "Ecommerce";
+    catsUpdated = true;
+  }
+  defaultCategories.forEach(defCat => {
+    if (!categories.some(c => c.toLowerCase() === defCat.toLowerCase())) {
+      categories.push(defCat);
+      catsUpdated = true;
+    }
+  });
+  if (catsUpdated) {
+    localStorage.setItem('portfolio_categories', JSON.stringify(categories));
+  }
 }
 
 let projects = JSON.parse(localStorage.getItem('portfolio_projects'));
 if (!projects || !Array.isArray(projects)) {
   projects = defaultProjects;
   localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+} else {
+  // Sync any newly added default projects and updated categories into localStorage so they appear immediately
+  let updated = false;
+  defaultProjects.forEach(defProj => {
+    const existing = projects.find(p => p.id === defProj.id);
+    if (!existing) {
+      projects.push(defProj);
+      updated = true;
+    } else {
+      if (JSON.stringify(existing.categories) !== JSON.stringify(defProj.categories)) {
+        existing.categories = defProj.categories;
+        existing.category = defProj.category;
+        updated = true;
+      }
+    }
+  });
+  if (updated) {
+    localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+  }
 }
 
 function normalizeProjects() {
@@ -1432,7 +1542,7 @@ const filterFunc = function (selectedValue) {
   const val = selectedValue.trim().toLowerCase();
 
   for (let i = 0; i < filterItems.length; i++) {
-    const rawCategories = filterItems[i].getAttribute("data-categories") || "";
+    const rawCategories = filterItems[i].getAttribute("data-categories") || filterItems[i].getAttribute("data-category") || "";
     const projectCats = rawCategories.split(',').map(c => c.trim().toLowerCase());
 
     if (val === "all" || projectCats.includes(val)) {
